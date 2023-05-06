@@ -1,0 +1,413 @@
+// First Question
+a) Design a brute-force algorithm to solve this problem (4 marks), and analyse the
+
+Algorithm: descending_order(arr)
+
+Input:
+- arr: an array of integers
+
+Output:
+- an array containing the corresponding descending order of each element in arr
+
+Steps:
+1. Initialize an empty result array res with the same length as arr
+2. For each element val in the input array arr:
+   a. Initialize a counter c to 1
+   b. For each element other in the input array arr:
+      i. If other is greater than val, increment c by 1
+   c. Set res[i] to c
+3. Return the updated result array res
+
+Analysis: The algorithm has a time complexity of O(n^2) and a space complexity of O(n), where n is the length of the input array arr.
+This is because the algorithm has two nested for loops, which means that the time complexity is O(n^2).
+The space complexity is O(n) because the algorithm creates a new array res with the same length as arr.
+
+b) Design a more efficient algorithm to do the same task with less complexity and analyse the complexity of your solution
+
+Algorithm: descending_order(arr)
+
+Input:
+- arr: an array of integers
+
+Output:
+- an array containing the corresponding descending order of each element in arr
+
+Steps:
+1. Create a dictionary rank to store the element-order mapping
+2. Sort the input array arr in descending order
+3. For each element val in the sorted array arr:
+   a. Set rank[val] to the current index of val in arr plus 1
+4. For each element val in the input array arr:
+   a. Set arr[i] to rank[val]
+5. Return the updated input array arr
+
+Analysis: The algorithm has a time complexity of O(nlogn) and a space complexity of O(n), where n is the length of the input array arr.
+This is because the algorithm has a for loop and a sort function, which means that the time complexity is O(nlogn).
+The space complexity is O(n) because the algorithm creates a new dictionary rank with the same length as arr.
+
+c) Develop a python code to implement your efficient algorithm
+
+def descending_order(arr):
+    n = len(arr)
+    rank = {val: i+1 for i, val in enumerate(sorted(arr, reverse=True))}
+    for i in range(n):
+        arr[i] = rank[arr[i]]
+    return arr
+
+Test your code with the following test cases
+# Test case 1
+arr1 = [10, 12, 17, 14, 8, 3, 22]
+expected1 = [5, 4, 2, 3, 6, 7, 1]
+assert descending_order(arr1) == expected1
+
+# Test case 2
+arr2 = [1, 2, 3, 4, 5]
+expected2 = [5, 4, 3, 2, 1]
+assert descending_order(arr2) == expected2
+
+# Test case 3
+arr3 = [5, 4, 3, 2, 1]
+expected3 = [1, 2, 3, 4, 5]
+assert descending_order(arr3) == expected3
+
+
+// Second Question
+a) Design a brute-force algorithm to solve this problem (4 marks), and analyse the complexity of your solution
+
+Algorithm: find_triplet(arr)
+
+Input:
+- arr: an array of integers
+
+Output:
+- A descending sorted triplet (a, b, c) such that a > b > c, or None if no such triplet exists
+
+Steps:
+1.For each element a in arr:
+  a. For each element b in arr that comes after a:
+    i. If b is less than a, skip to the next b
+    ii. For each element c in arr that comes after b:
+     1. If c is less than b, skip to the next c
+     2. If a > b > c, return (a, b, c)
+2.If no descending triplet was found, return None
+
+Analysis: The algorithm has a time complexity of O(n^3) and a space complexity of O(1), where n is the length of the input array arr.
+This is because the algorithm has three nested for loops, which means that the time complexity is O(n^3). The space complexity is O(1) because the algorithm does not create any new data structures.
+
+b) Design a more efficient algorithm to do the same task with less complexity and analyse the complexity of your solution
+
+Algorithm: find_triplet_efficient(arr)
+
+Input:
+- arr: an array arr of n integers
+
+Output:
+- a triplet of integers from arr that satisfy certain conditions, or an empty list if no such triplet exists
+
+Steps:
+1. if n < 3, return []
+2. initialize an array max_k of length n to store the index of the largest element to the right of each element in arr
+3. iterate through arr from left to right:
+        for i = 0 to n-2:
+            if arr[i] > arr[max_k[i+1]]:
+                iterate through the elements of arr to the right of i:
+                    for j = i+1 to n-2:
+                        if arr[j] > arr[max_k[j+1]] and arr[i] > arr[j]:
+                            return [arr[i], arr[j], arr[max_k[j+1]]]
+4. if no triplet is found, return []
+
+Analysis: The algorithm has a time complexity of O(n^2) and a space complexity of O(n), where n is the length of the input array arr.
+This is because the algorithm has two nested for loops, which means that the time complexity is O(n^2).
+The space complexity is O(n) because the algorithm creates a new array max_k with the same length as arr.
+
+c) Develop a python code to implement your efficient algorithm
+def find_triplet(arr):
+    n = len(arr)
+    if n < 3:  # Check if the input array has less than three elements
+        return []  # If so, return an empty list
+    max_k = [0] * n  # Create an auxiliary array to store the index of the largest element to the right of each element
+    max_k[n - 1] = n - 1  # Initialize the last element of max_k as n-1
+    # Iterate through the elements of arr from right to left
+    for i in range(n - 2, -1, -1):
+        # If the current element is larger than the largest element to its right, set its index as the largest
+        if arr[i] > arr[max_k[i + 1]]:
+            max_k[i] = i
+        else:  # Otherwise, the index of the largest element to the right remains the same
+            max_k[i] = max_k[i + 1]
+    # Iterate through the elements of arr from left to right, up to the second-to-last element
+    for i in range(n - 2):
+        # Check if the current element is larger than the largest element to its right
+        if arr[i] > arr[max_k[i + 1]]:
+            # Iterate through the elements of arr to the right of the current element
+            for j in range(i + 1, n - 1):
+                # Check if the current element and the current element to its right are larger than the largest
+                # element to the right of the second element
+                if arr[max_k[j + 1]] < arr[j] < arr[i]:
+                    # If so, return the triplet consisting of the current element, the second element,
+                    # and the largest element to the right of the second element
+                    return [arr[i], arr[j], arr[max_k[j + 1]]]
+    # If no triplet is found, return an empty list
+    return []
+
+Test your code with the following test cases
+# Test case 1
+arr = [9, 1, 6, 7, 3, 4, 5]
+assert find_triplet(arr) == [9, 7, 5]
+
+# Test case 2
+arr = [1, 2, 3]
+assert find_triplet(arr) == []
+
+# Test case 3
+arr = [1, 5, 4, 3, 2, 6, 7, 8]
+assert find_triplet(arr) == [5, 4, 2] or [5, 4, 3] or [6, 4, 2] or [6, 4, 3]
+
+# Test case 4
+arr = [1, 2, 3, 3, 2, 1]
+assert find_triplet(arr) == [3, 3, 2] or [3, 3, 1] or [3, 2, 1] or [2, 2, 1]
+
+d) write a brief report (250 words) comparing the two algorithm.
+The first algorithm is a brute-force algorithm that compares every possible triplet of elements in the array. It checks if each triplet satisfies the condition that the elements are in descending order, and returns the first triplet that satisfies the condition. The time complexity of this algorithm is O(n^3), because it has three nested loops that iterate over all possible triplets of elements in the array.
+
+The second algorithm is more efficient and uses a dynamic programming approach to solve the problem in O(n) time complexity. It first initializes an array max_k that stores the index of the largest element to the right of each element in the array. Then, it iterates through the array from left to right and checks if the current element is greater than the largest element to its right. If it is, then it iterates through the remaining elements of the array to find a triplet that satisfies the condition that the elements are in descending order. The time complexity of this algorithm is O(n^2), because it has two nested loops that iterate over all possible pairs of elements in the array.
+
+Overall, the second algorithm is much more efficient than the first one, especially for large input arrays. The dynamic programming approach used in the second algorithm eliminates the need to compare every possible triplet of elements, and instead uses a more efficient method to find the maximum element to the right of each element. As a result, the second algorithm has a significantly lower time complexity than the brute-force algorithm, and is a better choice for solving this problem.
+
+
+
+
+q2 another way to solve this problem is to use a dictionary to store the rank of each element in the array. The key of the dictionary is the element, and the value is the rank of the element. The algorithm then iterates through the array and replaces each element with its rank in the dictionary. The time complexity of this algorithm is O(nlogn), because it uses the sorted() function to sort the array, which has a time complexity of O(nlogn). The space complexity of this algorithm is O(n), because it creates a dictionary with the same length as the input array.
+def descending_order_efficient(arr):
+    # Step 1
+    rank = {}
+    # Step 2
+    arr_sorted = sorted(arr, reverse=True)
+    # Step 3
+    for i, val in enumerate(arr_sorted):
+        rank[val] = i + 1
+    # Step 4
+    for i, val in enumerate(arr):
+        arr[i] = rank[val]
+    # Step 5
+    return arr
+
+
+q3
+a) Design a brute-force algorithm to solve this problem (4 marks), and analyse the time and space complexity of your algorithm (2 marks).
+algorithm: longest_consecutive_subsequence
+input: arr, an array of integers
+
+output: max_len, the length of the longest consecutive subsequence in arr
+
+Steps:
+1. Define a function longest_consecutive_subsequence that takes an integer array arr as input.
+
+2. Sort the input array in ascending order using the sort() method of Python's built-in list object.
+
+3. Initialize two integer variables, max_length and curr_length, both to 1.
+These variables will be used to keep track of the length of the longest subsequence seen so far,
+and the length of the current subsequence being considered, respectively.
+
+4. Loop through the input array from the first element to the second-last element using a for loop and the range() function.
+
+5. Within the loop, check if the difference between the current element and the next element is 1 using the expression arr[i+1] - arr[i] == 1.
+If it is, increment curr_length by 1. This means that the current element is part of a consecutive subsequence that has been seen so far.
+
+6. If the difference between the current and next element is not 1, it means that the current subsequence has ended. Therefore,
+update max_length to be the maximum of max_length and curr_length using the max() function,
+and reset curr_length to 1 to start counting the length of a new subsequence.
+7. After the loop, update max_length again to be the maximum of max_length and curr_length.
+This is necessary because there might be a consecutive subsequence at the end of the array that was not counted in the loop.
+
+8. Return max_length, which is the length of the longest consecutive subsequence in the input array.
+
+Analysis:
+The time complexity of this algorithm is O(nlogn), because it uses the sort() method of Python's built-in list object to sort the input array, which has a time complexity of O(nlogn).
+The space complexity of this algorithm is O(1), because it only uses a constant amount of memory to store the variables max_length and curr_length.
+
+
+code:
+def longest_consecutive_subsequence(arr):
+    # Sort the array in ascending order
+    arr.sort()
+
+    # Initialize variables
+    max_length = 1
+    curr_length = 1
+
+    # Loop through the array
+    for i in range(len(arr)-1):
+        # Check if the difference between the current and previous element is 1
+        if arr[i+1] - arr[i] == 1:
+            curr_length += 1
+        else:
+            # Update max_length if curr_length is greater
+            max_length = max(max_length, curr_length)
+            # Reset curr_length to 1
+            curr_length = 1
+
+    # Update max_length if curr_length is greater
+    max_length = max(max_length, curr_length)
+
+    return max_length
+
+b) Design a more efficient algorithm to solve this problem (4 marks), and analyse the time and space complexity of your algorithm (2 marks).
+
+algorithm: longest_consecutive_subsequence_efficient
+input: arr, an array of integers
+
+output: max_len, the length of the longest consecutive subsequence in arr
+
+Steps:
+1.Initialize an empty hash set called num_set.
+2.For each number in arr, add it to num_set.
+3.Initialize max_len to 0.
+4.For each number num in num_set, do the following:
+    a. If num-1 is not in num_set, then num is the start of a consecutive subsequence.
+    b. Initialize curr_num to num and curr_len to 1.
+    c. While curr_num+1 is in num_set, do the following:
+        i. Increment curr_num by 1.
+       ii. Increment curr_len by 1.
+    d. Update max_len to be the maximum of max_len and curr_len.
+5.Return max_len.
+
+Analysis:
+The time complexity of this algorithm is O(n), because it loops through the input array once to add all the elements to the hash set,
+and then loops through the hash set once to find the longest consecutive subsequence.
+The space complexity of this algorithm is O(n), because it creates a hash set with the same length as the input array.
+
+
+code:
+def longest_consecutive_subsequence_efficient(arr):
+    # Create an empty set to store the numbers in arr
+    num_set = set()
+
+    # Add all the numbers in arr to the set
+    for num in arr:
+        num_set.add(num)
+
+    # Initialize max_len to 0
+    max_len = 0
+
+    # Loop through each number in num_set
+    for num in num_set:
+        # If num-1 is not in num_set, then num is the start of a consecutive subsequence
+        if num - 1 not in num_set:
+            # Initialize curr_num and curr_len to num and 1, respectively
+            curr_num = num
+            curr_len = 1
+
+            # Increment curr_num and curr_len until curr_num+1 is not in num_set
+            while curr_num + 1 in num_set:
+                curr_num += 1
+                curr_len += 1
+
+            # Update max_len to be the maximum of max_len and curr_len
+            max_len = max(max_len, curr_len)
+
+    # Return the length of the longest consecutive subsequence
+    return max_len
+
+
+c) Which of the two algorithms is more efficient? Explain why. (2 marks)
+
+The two algorithms presented are used to find the length of the longest consecutive subsequence in an array of integers.
+The first algorithm, longest_consecutive_subsequence, uses a brute-force approach by first sorting the input array and then looping through it to find consecutive integers.
+The second algorithm, longest_consecutive_subsequence_efficient,
+uses a hash set to keep track of unique integers in the array and then iterates through each integer to find the longest consecutive subsequence.
+
+The time complexity of the first algorithm is O(n log n) due to the sorting step, where n is the size of the input array.
+The time complexity of the second algorithm is O(n), as it only requires a single iteration through the array.
+Therefore, the second algorithm is more efficient and performs better for larger arrays.
+
+Additionally, the second algorithm does not modify the original array, whereas the first algorithm sorts the input array in place.
+If preserving the order of the original array is important, the second algorithm may be a better choice.
+
+Overall, the second algorithm, longest_consecutive_subsequence_efficient,
+is the better choice due to its superior time complexity and ability to preserve the order of the original array.
+
+
+
+
+
+Q2 code
+def find_triplet(arr):
+    n = len(arr)
+    if n < 3:  # Check if the input array has less than three elements
+        return []  # If so, return an empty list
+    max_k = [0] * n  # Create an auxiliary array to store the index of the largest element to the right of each element
+    max_k[n - 1] = n - 1  # Initialize the last element of max_k as n-1
+    # Iterate through the elements of arr from right to left
+    for i in range(n - 2, -1, -1):
+        # If the current element is larger than the largest element to its right, set its index as the largest
+        if arr[i] > arr[max_k[i + 1]]:
+            max_k[i] = i
+        else:  # Otherwise, the index of the largest element to the right remains the same
+            max_k[i] = max_k[i + 1]
+    # Iterate through the elements of arr from left to right, up to the second-to-last element
+    for i in range(n - 2):
+        # Check if the current element is larger than the largest element to its right
+        if arr[i] > arr[max_k[i + 1]]:
+            # Iterate through the elements of arr to the right of the current element
+            for j in range(i + 1, n - 1):
+                # Check if the current element and the current element to its right are larger than the largest
+                # element to the right of the second element
+                if arr[max_k[j + 1]] < arr[j] < arr[i]:
+                    # If so, return the triplet consisting of the current element, the second element,
+                    # and the largest element to the right of the second element
+                    return [arr[i], arr[j], arr[max_k[j + 1]]]
+    # If no triplet is found, return an empty list
+    return []
+
+
+
+Q3 code
+
+psuedocode:
+
+LCS(arr):
+    Initialize map to empty dictionary
+    Initialize maxCount to 1
+    For each element i in arr:
+        If i is in map:
+            Continue to next iteration
+        Add i to map with value 1
+        If i-1 is in map:
+            Update maxCount with maximum of maxCount and result of merge(map, i-1, i)
+        If i+1 is in map:
+            Update maxCount with maximum of maxCount and result of merge(map, i, i+1)
+    Return maxCount
+
+merge(map, left, right):
+    Calculate upper as right + map[right] - 1
+    Calculate lower as left - map[left] + 1
+    Calculate length as upper - lower + 1
+    Update map[upper] and map[lower] with length
+    Return length
+
+analysis:
+The time complexity of this algorithm is O(n), because it loops through the input array once to add all the elements to the hash map,
+and then loops through the hash map once to find the longest consecutive subsequence.
+The space complexity of this algorithm is O(n),This is because the algorithm uses a dictionary to keep track of the lengths of consecutive sequences.
+
+
+
+
+
+create input array be input array of integers
+Let n equal length of array
+create orderd_array  be length of  n
+Create sorted_array to be a clone of the input_array sorted in descending  order
+Create d  be an empty dictionary
+For i <- 0 to n-1
+	If sorted_array[i] is not in d then:
+		Add sorted_array[i] to d with value i + 1
+For  i <- 0 to n-1
+	Set ordered_array[i] to d[input_array[i]]
+Return ordered_array
+
+
+analysis:
+The time complexity of this algorithm is O(n log n), because it loops through the input array once to add all the elements to the hash map,
+and then loops through the hash map once to find the longest consecutive subsequence.
+The space complexity of this algorithm is O(n),This is because the algorithm uses a dictionary to keep track of the lengths of consecutive sequences.

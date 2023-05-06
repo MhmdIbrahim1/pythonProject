@@ -1,0 +1,177 @@
+	a)  =>  brute force approach
+1 . create input array be input array of integers
+2 .  Let n equal length of array
+
+3.  create orderd_array  be length of  n   orderd_array =  [0] * n
+4. For i <- 0 to n-1
+ 5. create order var equal to 1
+ 6. for j <- 0 to n -1
+         7. if input_array[j] > orderd_array[i]
+	    8.  order  + = 1
+9 . Set orderd_array[i] to order
+Return orderd_array     .
+
+analysis:
+The time complexity of this algorithm is O(n^2), because it loops through the input array once to add all the elements to the hash map,
+and then loops through the hash map once to find the longest consecutive subsequence.
+The space complexity of this algorithm is O(n),This is because the algorithm uses a dictionary to keep track of the lengths of consecutive sequences.
+
+create input array be input array of integers
+Let n equal length of array
+create orderd_array  be length of  n
+Create sorted_array to be a clone of the input_array sorted in descending  order
+Create d  be an empty dictionary
+For i <- 0 to n-1
+	If sorted_array[i] is not in d then:
+		Add sorted_array[i] to d with value i + 1
+For  i <- 0 to n-1
+	Set ordered_array[i] to d[input_array[i]]
+Return ordered_array
+
+
+analysis:
+The time complexity of this algorithm is O(n log n), because it loops through the input array once to add all the elements to the hash map,
+and then loops through the hash map once to find the longest consecutive subsequence.
+The space complexity of this algorithm is O(n),This is because the algorithm uses a dictionary to keep track of the lengths of consecutive sequences.
+
+
+
+
+The first algorithm is a brute-force approach to solving the problem.
+It has a time complexity of O(n^2) because it uses two nested loops to compare each element in the input array with all other elements in the array.
+ The space complexity of this algorithm is O(n) because it uses an additional array of length n to store the output.
+
+The second algorithm is an efficient approach that uses sorting and a dictionary to solve the problem.
+It has a time complexity of O(n log n) because it sorts the input array which takes O(n log n) time.
+The space complexity of this algorithm is also O(n) because it uses an additional array of length n to store the output
+and a dictionary to keep track of the descending orders.
+
+
+
+def q3_brute_force(input_array):
+    max_len = 0
+    for num in nums:
+        curr_num = num
+        curr_len = 1
+        while curr_num + 1 in nums:
+            curr_num += 1
+            curr_len += 1
+        max_len = max(max_len, curr_len)
+    return max_len
+
+write q3 in pseudocode
+
+Q3 Brute Force Approach
+algorithm LCS_BruteForce(nums)
+1.let max_len be 0
+2.for each num in nums
+    3.let curr_num be num
+    4.let curr_len be 1
+    5.while curr_num + 1 is in nums
+        6.let curr_num be curr_num + 1
+        7.let curr_len be curr_len + 1
+    8.let max_len be max(max_len, curr_len)
+
+analysis:
+Time Complexity: O(n³)
+The outer for loop runs n times. The inner while loop can run upto n times for the worst case if the entire array forms consecutive sequence,
+and finding curr_num + 1 in nums has complexity 0(n).
+so the total time complexity is O(n) * O(n) * O(n) = O(n³)
+
+Space Complexity: O(n) the input array is stored in nums
+
+def q3_efficient(input_array):
+    nums = set(input_array)
+    max_len = 0
+    for num in nums:
+        if num - 1 not in nums:
+            curr_num = num
+            curr_len = 1
+            while curr_num + 1 in nums:
+                curr_num += 1
+                curr_len += 1
+            max_len = max(max_len, curr_len)
+    return max_len
+
+write q3 in pseudocode
+
+Q3 Efficient Approach
+algorithm LCS_Efficient(nums)
+1.let nums be a set of nums
+2.let max_len be 0
+3.for each num in nums
+    4.if num - 1 is not in nums
+        5.let curr_num be num
+        6.let curr_len be 1
+        7.while curr_num + 1 is in nums
+            8.let curr_num be curr_num + 1
+            9.let curr_len be curr_len + 1
+        10.let max_len be max(max_len, curr_len)
+
+analysis:
+Time Complexity: O(n)
+The outer for loop runs n times. The inner while loop can run upto n times for the worst case if the entire array forms consecutive sequence,
+and finding curr_num + 1 in nums has complexity 0(1).
+so the total time complexity is O(n) * O(1) = O(n)
+
+Space Complexity: O(n) the input array is stored in nums
+
+The first algorithm is a brute-force approach to solving the problem.
+It has a time complexity of O(n³) because it uses two nested loops to compare each element in the input array with all other elements in the array.
+ The space complexity of this algorithm is O(n) because it uses an additional array of length n to store the output.
+
+
+Q2 code
+def find_triplet(arr):
+    n = len(arr)
+    if n < 3:  # Check if the input array has less than three elements
+        return []  # If so, return an empty list
+    max_k = [0] * n  # Create an auxiliary array to store the index of the largest element to the right of each element
+    max_k[n - 1] = n - 1  # Initialize the last element of max_k as n-1
+    # Iterate through the elements of arr from right to left
+    for i in range(n - 2, -1, -1):
+        # If the current element is larger than the largest element to its right, set its index as the largest
+        if arr[i] > arr[max_k[i + 1]]:
+            max_k[i] = i
+        else:  # Otherwise, the index of the largest element to the right remains the same
+            max_k[i] = max_k[i + 1]
+    # Iterate through the elements of arr from left to right, up to the second-to-last element
+    for i in range(n - 2):
+        # Check if the current element is larger than the largest element to its right
+        if arr[i] > arr[max_k[i + 1]]:
+            # Iterate through the elements of arr to the right of the current element
+            for j in range(i + 1, n - 1):
+                # Check if the current element and the current element to its right are larger than the largest
+                # element to the right of the second element
+                if arr[max_k[j + 1]] < arr[j] < arr[i]:
+                    # If so, return the triplet consisting of the current element, the second element,
+                    # and the largest element to the right of the second element
+                    return [arr[i], arr[j], arr[max_k[j + 1]]]
+    # If no triplet is found, return an empty list
+    return []
+
+
+algorithm find_triplet_efficient(arr)
+1.n = length of arr
+2.IF n < 3
+    RETURN empty list
+3.CREATE max_k array of size n with all elements initialized to 0
+4.max_k[n-1] = n-1
+5.FOR i from n-2 to 0 (inclusive) in reverse order
+    a.IF arr[i] > arr[max_k[i+1]]
+        i.max_k[i] = i
+    b.ELSE
+        i.max_k[i] = max_k[i+1]
+6. FOR i from 0 to n-3 (inclusive)
+    a.IF arr[i] > arr[max_k[i+1]]
+        i. FOR j from i+1 to n-2 (inclusive)
+            ii.IF arr[max_k[j+1]] < arr[j] < arr[i]
+                iii.RETURN [arr[i], arr[j], arr[max_k[j+1]]]
+RETURN empty list
+
+Q2 analysis
+The time complexity of the find_triplet function is O(n^2). This is because the function contains two nested loops. The first loop iterates from n-2 to 0 (inclusive) in reverse order, which takes O(n) time. The second loop iterates from 0 to n-3 (inclusive), which also takes O(n) time. Inside this loop, there is another loop that iterates from i+1 to n-2 (inclusive), which takes O(n) time. Since this innermost loop is nested inside the second loop, the total time complexity of these two loops is O(n^2). All other operations inside the function take constant time, so they do not affect the overall time complexity.
+The space complexity of the find_triplet function is O(n). This is because the function creates an auxiliary array max_k of size n. All other variables used in the function take constant space, so they do not affect the overall space complexity.
+
+
+

@@ -1,0 +1,87 @@
+Q 3)
+a) brute force
+
+LCS_brute_force(arr):
+    Initialize maxCount to 0
+    For each element i in arr:
+        Initialize currentCount to 1
+        Initialize currentElement to i
+        While currentElement+1 is in arr:
+            Increment currentCount
+            Increment currentElement
+        Initialize currentElement to i
+        While currentElement-1 is in arr:
+            Increment currentCount
+            Decrement currentElement
+        Update maxCount with maximum of maxCount and currentCount
+    Return maxCount
+
+analysis:
+the time complexity is O(n^2) because for each element in the array, we have to check if the next element is in the array.
+the space complexity is O(1) because we only need to store the maxCount and currentCount.
+
+b) more efficient
+
+LCS_more_efficient(arr):
+    Initialize map to empty dictionary
+    Initialize maxCount to 1
+    For each element i in arr:
+        If i is in map:
+            Continue to next iteration
+        Add i to map with value 1
+        If i-1 is in map:
+            Update maxCount with maximum of maxCount and result of merge(map, i-1, i)
+        If i+1 is in map:
+            Update maxCount with maximum of maxCount and result of merge(map, i, i+1)
+    Return maxCount
+
+merge(map, left, right):
+    Calculate upper as right + map[right] - 1
+    Calculate lower as left - map[left] + 1
+    Calculate length as upper - lower + 1
+    Update map[upper] and map[lower] with length
+    Return length
+
+analysis:
+the time complexity is O(n) because we only need to iterate through the array once, and each merge operation takes O(1) time.
+the space complexity is O(n). This is because the algorithm uses a dictionary to keep track of the lengths of consecutive sequences.
+
+c) code more efficient
+
+
+def LCS_Efficient(arr):
+    # Initialize map and maxCount
+    map = {}
+    maxCount = 1
+    for i in arr:
+        # Skip if i is already in map
+        if i in map:
+            continue
+        # Add i to map
+        map[i] = 1
+        # Check if i-1 is in map and update maxCount
+        if i - 1 in map:
+            maxCount = max(maxCount, merge(map, i - 1, i))
+        # Check if i+1 is in map and update maxCount
+        if i + 1 in map:
+            maxCount = max(maxCount, merge(map, i, i + 1))
+    return maxCount
+
+def merge(map, left, right):
+    # Find upper and lower bounds of sequence
+    upper = right + map[right] - 1
+    lower = left - map[left] + 1
+    # Calculate length of sequence
+    length = upper - lower + 1
+    # Update map with new length
+    map[upper] = length
+    map[lower] = length
+    return length
+
+
+d)  report of 250 comparisons of the LCS algorithms
+The first algorithm, LCS_brute_force, is a brute-force solution to the problem of finding the length of the longest consecutive sequence in an array of integers. This algorithm has a time complexity of O(n^2), where n is the length of the input array. For each element in the input array, the algorithm checks for the presence of consecutive elements to its left and right. In the worst case, this could take O(n) time for each element, resulting in an overall time complexity of O(n^2). The space complexity of this algorithm is O(1) because it only needs to store a few variables.
+
+The second algorithm, LCS_more_efficient, is a more efficient solution to the same problem. This algorithm has a time complexity of O(n) because it only needs to iterate through the input array once and each merge operation takes constant time. The space complexity of this algorithm is O(n) because it uses a dictionary to keep track of the lengths of consecutive sequences.
+
+In summary, the second algorithm (LCS_more_efficient) is more efficient than the first algorithm (LCS_brute_force) in terms of both time and space complexity. While the first algorithm has a quadratic time complexity and constant space complexity, the second algorithm has a linear time complexity and linear space complexity.
