@@ -71,7 +71,6 @@ import tkinter as tk
 from tkinter import messagebox
 import random
 
-
 # Create window
 # window = tk.Tk()
 # window.title("X|O")
@@ -1092,47 +1091,75 @@ def is_ascending(arr):
 # else:
 #     print(find_descending_sorted_triplet_efficient(A))
 #
-def min_time_to_acquire_skills(books):
-    skill_counts = [0, 0]
-    for book in books:
-        for i in range(2):
-            if book[1][i] == '1':
-                skill_counts[i] += 1
+# def min_time_to_acquire_skills(books):
+#     skill_counts = [0, 0]
+#     for book in books:
+#         for i in range(2):
+#             if book[1][i] == '1':
+#                 skill_counts[i] += 1
+#
+#     for book in books:
+#         if book[1] == '11':
+#             return book[0]
+#
+#     for i in range(2):
+#         if skill_counts[i] == 0:
+#             return -1
+#     min_time = float('inf')
+#     for j in range(len(books)):
+#         if books[j][1][0] == '1':
+#             for k in range(len(books)):
+#                 if k != j and books[k][1][1] == '1':
+#                     min_time = min(min_time, books[j][0] + books[k][0])
+#     if min_time == float('inf'):
+#         return -1
+#     return min_time
+#
+#
+# for _ in range(int(input())):
+#     n = int(input())
+#     s1 = s2 = s12 = float("inf")
+#
+#     for _ in range(n):
+#         m, s = input().split()
+#         if s == "10":
+#             s1 = min(s1, int(m))
+#         elif s == "01":
+#             s2 = min(s2, int(m))
+#         elif s == "11":
+#             s12 = min(s12, int(m))
+#         else:
+#             continue
+#
+#     if s12 < s1 + s2:
+#         print(s12)
+#     else:
+#         print(s1 + s2) if s1 != float("inf") and s2 != float("inf") else print(-1)
 
-    for book in books:
-        if book[1] == '11':
-            return book[0]
 
-    for i in range(2):
-        if skill_counts[i] == 0:
-            return -1
-    min_time = float('inf')
-    for j in range(len(books)):
-        if books[j][1][0] == '1':
-            for k in range(len(books)):
-                if k != j and books[k][1][1] == '1':
-                    min_time = min(min_time, books[j][0] + books[k][0])
-    if min_time == float('inf'):
-        return -1
-    return min_time
+import sys
+
+sys.setrecursionlimit(10 ** 6)
 
 
-for _ in range(int(input())):
-    n = int(input())
-    s1 = s2 = s12 = float("inf")
+def dfs(i, j):
+    if i < 0 or j < 0 or i >= n or j >= m or a[i][j] == 0 or visited[i][j]:
+        return 0
+    visited[i][j] = True
+    return a[i][j] + dfs(i - 1, j) + dfs(i + 1, j) + dfs(i, j - 1) + dfs(i, j + 1)
 
-    for _ in range(n):
-        m, s = input().split()
-        if s == "10":
-            s1 = min(s1, int(m))
-        elif s == "01":
-            s2 = min(s2, int(m))
-        elif s == "11":
-            s12 = min(s12, int(m))
-        else:
-            continue
 
-    if s12 < s1 + s2:
-        print(s12)
-    else:
-        print(s1 + s2) if s1 != float("inf") and s2 != float("inf") else print(-1)
+t = int(input())
+for _ in range(t):
+    n, m = map(int, input().split())
+    a = []
+    for i in range(n):
+        row = list(map(int, input().split()))
+        a.append(row)
+    visited = [[False] * m for _ in range(n)]
+    ans = 0
+    for i in range(n):
+        for j in range(m):
+            if a[i][j] != 0 and not visited[i][j]:
+                ans = max(ans, dfs(i, j))
+    print(ans)
